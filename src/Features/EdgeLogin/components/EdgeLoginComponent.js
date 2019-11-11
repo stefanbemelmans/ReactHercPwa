@@ -4,26 +4,27 @@ import React, { Component } from 'react'
 import { restoreCachedState } from '../../hmrCache'
 import { AccountButtons } from './AccountButtons.js'
 import { AccountInfo } from './AccountInfo.js'
-import { ContextInfo } from './ContextInfo.js'
 import { WalletInfo } from './WalletInfo.js'
 import { WelcomeButtons } from './WelcomeButtons.js'
 
+import { connect } from 'react-redux'
+import * as AppActions from '../../Application/actions/ApplicationActions'
 
-// TODO: remove magic strings
 const contextOptions = {
-      apiKey: "a9ef0e4134410268a37d833e49990a1b90ec79dc",
-      appId: "herc_react_pwa",
-      assetsPath: `https://developer.airbitz.co/edge-login-ui-web/iframe/index.html`,
-      vendorName: "Hercules",
-      vendorImageUrl: "https://s3.us-east-2.amazonaws.com/hercmedia/hLogo.png",
-      // plugins: [ethereumCurrencyPluginFactory],
-    };
+  apiKey: "a9ef0e4134410268a37d833e49990a1b90ec79dc",
+  appId: "herc_react_pwa",
+  assetsPath: `https://developer.airbitz.co/edge-login-ui-web/iframe/index.html`,
+  vendorName: "Hercules",
+  vendorImageUrl: "https://s3.us-east-2.amazonaws.com/hercmedia/hLogo.png",
+  // plugins: [ethereumCurrencyPluginFactory],
+};
+
 
 /**
  * The top-level component in the demo.
  * Manages the edge context and login state.
  */
-export class EdgeLoginComponent extends Component {
+class EdgeLoginComponent extends Component {
   constructor(props) {
     super(props)
     // Just use the previous state if the page live-reloads:
@@ -32,24 +33,24 @@ export class EdgeLoginComponent extends Component {
     // make the context
     this.makeEdgeContext()
   }
-  /**
-   * Creates an EdgeUiContext and saves it in state.
+   /**
+   * Creates an EdgeUiContext and saves it in redux-state.
    */
-
-  async makeEdgeContext() {
+ async makeEdgeContext () {
     // Make the context:
     const context = await makeEdgeUiContext(contextOptions)
-    this.setState({ context })
-
+    console.log("setting Context");
+    AppActions.setEdgeContext(context)
+  
     // Sign up to be notified when the context logs in:
     context.on('login', edgeAccount => this.onLogin(edgeAccount))
   }
-
   /**
    * Handles logging in.
    */
   async onLogin(account) {
     console.log('Login for', account.username)
+    AppActions.edgeLogin(account);
     try {
       // Find the app wallet, or create one if necessary:
       const walletInfo = account.getFirstWalletInfo('wallet:ethereum')
@@ -63,7 +64,7 @@ export class EdgeLoginComponent extends Component {
       console.error(e)
     }
   }
-
+// TODO: integrate map state to props map dispatch to props
   /**
    * Logout button was clicked.
    */
@@ -110,3 +111,5 @@ export class EdgeLoginComponent extends Component {
     )
   }
 }
+
+export default connect()(EdgeLoginComponent)

@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import './App.css';
+
+import { ContextInfo } from '../../Application/components/ContextInfo.js/index.js'
+
 import { EdgeLoginPage } from "../../../Pages/EdgeLoginPage"
 import {
   BrowserRouter as Router,
@@ -23,7 +26,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <h3>where</h3>
+          <h3><ContextInfo /></h3>
           {/* <EdgeLoginPage /> */}
           <ul>
             <li>
