@@ -1,10 +1,9 @@
 import { combineReducers } from 'redux'
-import ApplicationState from './ApplicationState'
-import visibilityFilter from './visibilityFilter'
+import ApplicationState from './ApplicationReducers'
 
 export default combineReducers({
-  todos,
-  visibilityFilter
+    ApplicationState
+ 
 })
 
 

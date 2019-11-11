@@ -1,10 +1,12 @@
 
-var initialApplicationState = {
+var InitialAppState = {
     LoggedIn: false,
     edgeAccount: null,
 }
 
-const ApplicationState = (state = initialApplicationState, action) => {
+// Basic App State
+
+const ApplicationReducers = (ApplicationState = InitialAppState, action) => {
   switch (action.type) {
     case 'Edge_Login':
       return{ 
@@ -17,8 +19,8 @@ const ApplicationState = (state = initialApplicationState, action) => {
         edgeAccount: null
       }
     default:
-      return state
+      return ApplicationState
   }
 }
 
-export default ApplicationState;
+export default ApplicationReducers;
