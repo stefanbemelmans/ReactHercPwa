@@ -1,5 +1,6 @@
 import React from "react"
-import { EdgeLoginComponent } from "../Features/EdgeLogin/components/EdgeLoginComponent";
+import  EdgeLoginComponent  from "../Features/EdgeLogin/components/EdgeLoginComponent";
 
-export const EdgeLoginPage = () => <EdgeLoginComponent />;
+const EdgeLoginPage = () => (<EdgeLoginComponent />);
 
+export default EdgeLoginPage;

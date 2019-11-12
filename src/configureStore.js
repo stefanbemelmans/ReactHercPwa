@@ -5,11 +5,12 @@
 import { applyMiddleware, compose, createStore, combineReducers } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
-import monitorReducersEnhancer from './enhancers/monitorReducers'
+import monitorReducersEnhancer from "./enhancers/monitorReducer"
 import loggerMiddleware from './middleware/logger'
-import ApplicationState from './ApplicationReducers'
 
-const rootReducer = combineReducers( ApplicationState );
+import ApplicationReducers from "../src/Features/Application/reducers/ApplicationReducers"
+
+const rootReducer = combineReducers( ApplicationReducers );
 
 
 export default function configureStore(preloadedState) {

@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import './App.css';
+import { ContextInfo } from "./ContextInfo"
+import EdgeLoginPage from "../../../Pages/EdgeLoginPage";
 
-import { ContextInfo } from '../../Application/components/ContextInfo.js/index.js'
-
-import { EdgeLoginPage } from "../../../Pages/EdgeLoginPage"
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,6 +17,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      localUsers: 3
     }
   }
 
@@ -26,7 +26,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <h3><ContextInfo /></h3>
+          <h3><ContextInfo context={this.props.context} /></h3>
           {/* <EdgeLoginPage /> */}
           <ul>
             <li>

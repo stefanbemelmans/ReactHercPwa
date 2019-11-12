@@ -11,6 +11,7 @@ export const edgeLogin = account => ({
     edgeAccount: account
 })
 
+
 export const edgeLogout = () => ({
     type: 'Edge_Logout',
     edgeAccount: null

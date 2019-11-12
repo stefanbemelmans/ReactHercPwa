@@ -1,12 +1,11 @@
 // Basic App State
 
 var InitialAppState = {
-    LoggedIn: false,
+    loggedIn: false,
     edgeAccount: null,
     edgeContext: null,
 
 }
-
 
 const ApplicationReducers = (ApplicationState = InitialAppState, action) => {
   switch (action.type) {
@@ -18,13 +17,13 @@ const ApplicationReducers = (ApplicationState = InitialAppState, action) => {
     case 'Edge_Login':
       return{ 
         ...ApplicationState, 
-        LoggedIn: true,
+        loggedIn: true,
         edgeAccount : action.edgeAccount
       }
     case 'Edge_Logout':
       return{ 
         ...ApplicationState, 
-        LoggedIn: false,
+        loggedIn: false,
         edgeAccount: null
       }
     default:

@@ -1,14 +1,15 @@
 import { makeEdgeUiContext } from 'edge-login-ui-web'
 import React, { Component } from 'react'
-
+import { ContextInfo } from "../../Application/components/ContextInfo";
 import { restoreCachedState } from '../../hmrCache'
 import { AccountButtons } from './AccountButtons.js'
 import { AccountInfo } from './AccountInfo.js'
 import { WalletInfo } from './WalletInfo.js'
 import { WelcomeButtons } from './WelcomeButtons.js'
 
+import * as ApplicationActions from "../../Application/actions/ApplicationActions";
+
 import { connect } from 'react-redux'
-import * as AppActions from '../../Application/actions/ApplicationActions'
 
 const contextOptions = {
   apiKey: "a9ef0e4134410268a37d833e49990a1b90ec79dc",
@@ -18,7 +19,6 @@ const contextOptions = {
   vendorImageUrl: "https://s3.us-east-2.amazonaws.com/hercmedia/hLogo.png",
   // plugins: [ethereumCurrencyPluginFactory],
 };
-
 
 /**
  * The top-level component in the demo.
@@ -33,15 +33,15 @@ class EdgeLoginComponent extends Component {
     // make the context
     this.makeEdgeContext()
   }
-   /**
-   * Creates an EdgeUiContext and saves it in redux-state.
-   */
- async makeEdgeContext () {
+  /**
+  * Creates an EdgeUiContext and saves it in redux-state.
+  */
+  async makeEdgeContext() {
     // Make the context:
     const context = await makeEdgeUiContext(contextOptions)
     console.log("setting Context");
-    AppActions.setEdgeContext(context)
-  
+    this.props.setEdgeContext(context)
+
     // Sign up to be notified when the context logs in:
     context.on('login', edgeAccount => this.onLogin(edgeAccount))
   }
@@ -50,7 +50,7 @@ class EdgeLoginComponent extends Component {
    */
   async onLogin(account) {
     console.log('Login for', account.username)
-    AppActions.edgeLogin(account);
+    ApplicationActions.edgeLogin(account);
     try {
       // Find the app wallet, or create one if necessary:
       const walletInfo = account.getFirstWalletInfo('wallet:ethereum')
@@ -64,7 +64,7 @@ class EdgeLoginComponent extends Component {
       console.error(e)
     }
   }
-// TODO: integrate map state to props map dispatch to props
+  // TODO: integrate map state to props map dispatch to props
   /**
    * Logout button was clicked.
    */
@@ -81,12 +81,12 @@ class EdgeLoginComponent extends Component {
       account == null || context == null ? (
         <WelcomeButtons context={context} />
       ) : (
-        <AccountButtons
-          account={account}
-          context={context}
-          onLogout={this.onLogout}
-        />
-      )
+          <AccountButtons
+            account={account}
+            context={context}
+            onLogout={this.onLogout}
+          />
+        )
 
     // Content area:
     const content = []
@@ -95,11 +95,11 @@ class EdgeLoginComponent extends Component {
         <WalletInfo account={account} wallet={wallet} key="wallet" />
       )
     }
-    if (account != null) {
-      content.push(<AccountInfo account={account} key="account" />)
+    if (this.props.edgeAccount != null) {
+      content.push(<AccountInfo account={this.props.edgeAccount} key="account" />)
     }
-    if (context != null) {
-      content.push(<ContextInfo context={context} key="context" />)
+    if (this.props.edgecontext != null) {
+      content.push(<ContextInfo context={this.props.edgecontext} key="context" />)
     }
 
     return (
@@ -112,4 +112,21 @@ class EdgeLoginComponent extends Component {
   }
 }
 
-export default connect()(EdgeLoginComponent)
+const mapStateToProps = (ApplicationState) => {
+  return {
+    loggedIn: ApplicationState.loggedIn,
+    edgeAccount: ApplicationState.edgeAccount,
+    EdgeUiContext: ApplicationState.EdgeContext,
+  }
+
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+    setEdgeContext: (context) => dispatch(ApplicationActions.setEdgeContext(context)),
+    edgeLogin: (edgeAccount) => dispatch(ApplicationActions.edgeLogin(edgeAccount)),
+    edgeLogout: () => dispatch(ApplicationActions.edgeLogout())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EdgeLoginComponent)
