@@ -68,25 +68,6 @@ const userStatus = {
   }
 };
 
-function AuthButton() {
-  let history = useHistory();
-
-  return userStatus.isLoggedIn ? (
-    <p>
-      Welcome!{" "}
-      <button
-        onClick={() => {
-          userStatus.signout(() => history.push("/"));
-        }}
-      >
-        Sign out
-      </button>
-    </p>
-  ) : (
-      <p>You are not logged in.</p>
-    );
-}
-
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 function PrivateRoute({ children, ...rest }) {

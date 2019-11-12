@@ -2,9 +2,9 @@ import { makeEdgeUiContext } from 'edge-login-ui-web'
 import React, { Component } from 'react'
 import { ContextInfo } from "../../Application/components/ContextInfo";
 import { restoreCachedState } from '../../hmrCache'
-import { AccountButtons } from './AccountButtons.js'
-import { AccountInfo } from './AccountInfo.js'
-import { WalletInfo } from './WalletInfo.js'
+import { AccountButtons } from '../../EdgeAccount/components/AccountButtons.js/index.js'
+import { AccountInfo } from '../../EdgeAccount/components/AccountInfo.js'
+import { WalletInfo } from '../../EdgeWallet/components/WalletInfo.js'
 import { WelcomeButtons } from './WelcomeButtons.js'
 
 import * as ApplicationActions from "../../Application/actions/ApplicationActions";
@@ -92,7 +92,7 @@ class EdgeLoginComponent extends Component {
     const content = []
     if (wallet != null && account != null) {
       content.push(
-        <WalletInfo account={account} wallet={wallet} key="wallet" />
+        <WalletInfo account={this.props.edgeAccount} wallet={this.props.edgeWallet} key="wallet" />
       )
     }
     if (this.props.edgeAccount != null) {

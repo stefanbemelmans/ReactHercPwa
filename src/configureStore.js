@@ -8,9 +8,9 @@ import thunkMiddleware from 'redux-thunk'
 import monitorReducersEnhancer from "./enhancers/monitorReducer"
 import loggerMiddleware from './middleware/logger'
 
-import ApplicationReducers from "../src/Features/Application/reducers/ApplicationReducers"
+import EdgeReducers from "./Features/Application/reducers/EdgeReducers"
 
-const rootReducer = combineReducers( ApplicationReducers );
+const rootReducer = combineReducers( EdgeReducers );
 
 
 export default function configureStore(preloadedState) {

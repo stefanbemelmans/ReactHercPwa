@@ -7,28 +7,28 @@ var InitialAppState = {
 
 }
 
-const ApplicationReducers = (ApplicationState = InitialAppState, action) => {
+const EdgeAccountReducers = (EdgeState = InitialAppState, action) => {
   switch (action.type) {
     case 'Set_Edge_Context':
       return{
-        ...ApplicationState, 
+        ...EdgeState, 
         context: action.edgeContext
       }
     case 'Edge_Login':
       return{ 
-        ...ApplicationState, 
+        ...EdgeState, 
         loggedIn: true,
         edgeAccount : action.edgeAccount
       }
     case 'Edge_Logout':
       return{ 
-        ...ApplicationState, 
+        ...EdgeState, 
         loggedIn: false,
         edgeAccount: null
       }
     default:
-      return ApplicationState
+      return EdgeState
   }
 }
 
-export default ApplicationReducers;
+export default EdgeReducers;
