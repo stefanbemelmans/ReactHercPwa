@@ -1,16 +1,14 @@
 // TODO: remove magic strings, install ".env"
 
-export const setEdgeContext = (context) =>
-    ({
-        type: SET_EDGE_CONTEXT,
-        edgeContext: context
-    })
+export const setEdgeContext = (context) => ({
+    type: SET_EDGE_CONTEXT,
+    edgeContext: context
+})
 
 export const edgeLogin = account => ({
     type: EDGE_LOGIN,
     edgeAccount: account
 })
-
 
 export const edgeLogout = () => ({
     type: EDGE_LOGOUT,

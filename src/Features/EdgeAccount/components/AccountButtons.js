@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 
 export class AccountButtons extends Component {
-  
+
   openManageWindow = () => {
     this.props.context.showAccountSettingsWindow(this.props.account)
   }

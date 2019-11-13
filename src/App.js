@@ -58,10 +58,8 @@ class App extends Component {
   */
   async onLogin(account) {
     console.log('Login for', account.username)
-    this.props.edgeLogin(account)
-
-    this.props.history.push('./wallet')
-
+    this.props.edgeLogin(account);
+    return  <Redirect to="./wallet" />
   }
 
   /**
@@ -96,7 +94,7 @@ class App extends Component {
           </Switch>
 
         </div>
-      </Router >
+      </Router>
     )
   }
 }
