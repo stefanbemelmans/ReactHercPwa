@@ -1,13 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import App from './Features/EdgeContext/components/App';
+import App from './App';
 
-import configureStore from './configureStore'
+import store from './store'
 import * as serviceWorker from './serviceWorker';
-
-
-const store = configureStore()
+console.log(store, "store")
 
 render(
   <Provider store={store}>

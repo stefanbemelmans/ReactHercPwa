@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import './App.css';
 import { makeEdgeUiContext } from 'edge-login-ui-web'
-import { ContextInfo } from "./ContextInfo"
+import { ContextInfo } from "./Features/EdgeContext/components/ContextInfo"
 import { connect } from "react-redux"
-import  EdgeLoginComponent  from "../../EdgeLogin/components/EdgeLoginComponent";
-import * as EdgeContextActions from "../actions/EdgeContextActions";
+import  EdgeLoginComponent  from "./Features/EdgeLogin/components/EdgeLoginComponent";
+import * as EdgeContextActions from "./Features/EdgeContext/actions/EdgeContextActions";
 
 import {
   BrowserRouter as Router,
@@ -29,38 +29,46 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      localUsers: 3
+      localUsers: 3,
+      edgeContext: null,
+      account: null
     }
     
     this.makeEdgeContext();
   }
  
   /**
-  * Creates an EdgeUiContext and saves it in redux-state.
+  * Creates an EdgeUiContext and saves it in state.
   */
   async makeEdgeContext() {
     // Make the context:
     const context = await makeEdgeUiContext(contextOptions)
     console.log("setting Context");
     this.props.setEdgeContext(context)
+    this.setState({edgeContext: context})
 
     // Sign up to be notified when the context logs in:
     context.on('login', edgeAccount => this.onLogin(edgeAccount))
   }
+
+ async onLogin(account) {
+    console.log('Login for', account.username)
+    this.props.edgeLogin(account)
+    this.setState({account})
+  }
+
   render() {
     console.log(this.props)
     return (
       <Router>
         <div>
           <h3>
-            <ContextInfo context={this.props.edgeContext} />
+            <ContextInfo context={this.state.edgeContext} />
           </h3>
          
-       <EdgeLoginComponent /> 
+    {this.state.edgeContext && <EdgeLoginComponent context={this.state.edgeContext} /> }
         
-        
-         {/*  refactor to have the login page 
-          if unauth and wallet page if auth */}
+                
           
           <Switch>
             <PrivateRoute path="/protected">
@@ -82,7 +90,7 @@ function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={({ location }) =>
-        this.props.loggedIn ? (
+        this.state.account ? (
           children
         ) : (
             <Redirect
