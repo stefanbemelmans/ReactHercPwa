@@ -6,26 +6,12 @@ import { connect } from 'react-redux'
 
 
 class EdgeLoginComponent extends Component {
-  
-  /**
-   * Handles logging in.
-   */
-  // async onLogin(account) {
-  //   console.log('Login for', account.username)
-  // }
-  /**
-   * Logout button was clicked.
-   */
-  // onLogout = () => {
-  //   if (this.state.account) this.state.account.logout()
-  //   this.setState({ account: undefined, wallet: undefined })
-  // }
 
   openLoginWindow() {
     console.log("trying to open the window")
     console.log(this.props)
 
-    this.props.context.showLoginWindow()
+    this.props.edgeContext.showLoginWindow()
   }
 
   render() {
@@ -34,7 +20,7 @@ class EdgeLoginComponent extends Component {
       <p id="buttons">
 
         <button onClick={() => this.openLoginWindow()}>
-          Login With Edge
+          Edge Login
           </button>
       </p>
     )
@@ -42,11 +28,11 @@ class EdgeLoginComponent extends Component {
   }
 }
 
-const mapStateToProps = (EdgeContextState) => {
+const mapStateToProps = (state) => {
   return {
-    loggedIn: EdgeContextState.loggedIn,
-    edgeAccount: EdgeContextState.edgeAccount,
-    edgeContext: EdgeContextState.EdgeContext,
+    loggedIn: state.loggedIn,
+    edgeAccount: state.edgeAccount,
+    edgeContext: state.edgeContext,
   }
 
 }

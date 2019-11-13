@@ -3,7 +3,7 @@ import './App.css';
 import { makeEdgeUiContext } from 'edge-login-ui-web'
 import { ContextInfo } from "./Features/EdgeContext/components/ContextInfo"
 import { connect } from "react-redux"
-import  EdgeLoginComponent  from "./Features/EdgeLogin/components/EdgeLoginComponent";
+import EdgeLoginComponent from "./Features/EdgeLogin/components/EdgeLoginComponent";
 import * as EdgeContextActions from "./Features/EdgeContext/actions/EdgeContextActions";
 
 import {
@@ -15,6 +15,7 @@ import {
   useHistory,
   useLocation
 } from "react-router-dom";
+import { WalletComponent } from "./Features/EdgeWallet/components/WalletComponent";
 
 const contextOptions = {
   apiKey: "a9ef0e4134410268a37d833e49990a1b90ec79dc",
@@ -33,28 +34,43 @@ class App extends Component {
       edgeContext: null,
       account: null
     }
-    
+
     this.makeEdgeContext();
   }
- 
+
   /**
-  * Creates an EdgeUiContext and saves it in state.
+  * Creates an EdgeUiContext and saves it in redux.
   */
   async makeEdgeContext() {
     // Make the context:
     const context = await makeEdgeUiContext(contextOptions)
     console.log("setting Context");
     this.props.setEdgeContext(context)
-    this.setState({edgeContext: context})
+    this.setState({ edgeContext: context })
 
     // Sign up to be notified when the context logs in:
     context.on('login', edgeAccount => this.onLogin(edgeAccount))
   }
 
- async onLogin(account) {
+  /**
+  * Handles logging in. saves the account in redux and redirect to 
+  * WalletPage
+  */
+  async onLogin(account) {
     console.log('Login for', account.username)
     this.props.edgeLogin(account)
-    this.setState({account})
+
+    this.props.history.push('./wallet')
+
+  }
+
+  /**
+  * Logout button was clicked.
+  */
+  async onLogout() {
+    console.log("Logout for" + this.props.edgeAccount.username)
+    this.props.edgeLogout()
+
   }
 
   render() {
@@ -63,16 +79,19 @@ class App extends Component {
       <Router>
         <div>
           <h3>
-            <ContextInfo context={this.state.edgeContext} />
+            <ContextInfo context={this.props.edgeContext} />
           </h3>
-         
-    {this.state.edgeContext && <EdgeLoginComponent context={this.state.edgeContext} /> }
-        
-                
-          
+          {this.props.loggedIn &&
+            <button onClick={() => this.onLogout()}>
+            Edge Logout
+            </button> }
+          {this.props.edgeContext && <EdgeLoginComponent />}
+
+
+
           <Switch>
-            <PrivateRoute path="/protected">
-           
+            <PrivateRoute path="/Wallet">
+              <WalletComponent />
             </PrivateRoute>
           </Switch>
 
@@ -90,12 +109,12 @@ function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={({ location }) =>
-        this.state.account ? (
-          children
+        this.props.loggedIn ? (
+          <WalletComponent />
         ) : (
             <Redirect
               to={{
-                pathname: "/login",
+                pathname: "/",
                 state: { from: location }
               }}
             />
@@ -104,12 +123,12 @@ function PrivateRoute({ children, ...rest }) {
     />
   );
 }
- 
-const mapStateToProps = (EdgeContextState) => {
+
+const mapStateToProps = (state) => {
   return {
-    loggedIn: EdgeContextState.loggedIn,
-    edgeAccount: EdgeContextState.edgeAccount,
-    edgeContext: EdgeContextState.EdgeContext,
+    loggedIn: state.loggedIn,
+    edgeAccount: state.edgeAccount,
+    edgeContext: state.edgeContext,
   }
 
 }

@@ -27,12 +27,11 @@ var InitialState = {
 function EdgeLoginReducer(EdgeContextState = InitialState, action) {
   switch (action.type) {
     case EdgeContextActions.SET_EDGE_CONTEXT:
-        let newState = Object.assign({}, EdgeContextState,
-          { ...EdgeContextState,
-            edgeContext: action.edgeContext
-          })
-          console.log(newState, "new STate in setedge context reducer")
-        return newState
+      return Object.assign({}, EdgeContextState,
+        {
+          ...EdgeContextState,
+          edgeContext: action.edgeContext
+        })
     case EdgeContextActions.EDGE_LOGIN:
       return Object.assign({}, EdgeContextState,
         {
