@@ -1,34 +1,34 @@
 // Basic App State
-
-var InitialAppState = {
+// import * as EdgeContextActionCreators from "../actions/EdgeContextActions"
+var EdgeContextState = {
     loggedIn: false,
     edgeAccount: null,
     edgeContext: null,
 
 }
 
-const EdgeAccountReducers = (EdgeState = InitialAppState, action) => {
+const EdgeContextReducers = (EdgeContextState, action) => {
   switch (action.type) {
     case 'Set_Edge_Context':
       return{
-        ...EdgeState, 
-        context: action.edgeContext
+        ...EdgeContextState, 
+        edgeContext: action.edgeContext
       }
     case 'Edge_Login':
       return{ 
-        ...EdgeState, 
+        ...EdgeContextState, 
         loggedIn: true,
         edgeAccount : action.edgeAccount
       }
     case 'Edge_Logout':
       return{ 
-        ...EdgeState, 
+        ...EdgeContextState, 
         loggedIn: false,
         edgeAccount: null
       }
     default:
-      return EdgeState
+      return EdgeContextState
   }
 }
 
-export default EdgeReducers;
+export default EdgeContextReducers;

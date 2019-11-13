@@ -1,25 +1,13 @@
-import { makeEdgeUiContext } from 'edge-login-ui-web'
 import React, { Component } from 'react'
-import { ContextInfo } from "../../Application/components/ContextInfo";
+import { ContextInfo } from "../../EdgeContext/components/ContextInfo"
 import { restoreCachedState } from '../../hmrCache'
-import { AccountButtons } from '../../EdgeAccount/components/AccountButtons.js/index.js'
+import { AccountButtons } from '../../EdgeAccount/components/AccountButtons'
 import { AccountInfo } from '../../EdgeAccount/components/AccountInfo.js'
 import { WalletInfo } from '../../EdgeWallet/components/WalletInfo.js'
 import { WelcomeButtons } from './WelcomeButtons.js'
 
-import * as ApplicationActions from "../../Application/actions/ApplicationActions";
-
+import * as EdgeContextActions from "../../EdgeContext/actions/EdgeContextActions"
 import { connect } from 'react-redux'
-
-const contextOptions = {
-  apiKey: "a9ef0e4134410268a37d833e49990a1b90ec79dc",
-  appId: "herc_react_pwa",
-  assetsPath: `https://developer.airbitz.co/edge-login-ui-web/iframe/index.html`,
-  vendorName: "Hercules",
-  vendorImageUrl: "https://s3.us-east-2.amazonaws.com/hercmedia/hLogo.png",
-  // plugins: [ethereumCurrencyPluginFactory],
-};
-
 /**
  * The top-level component in the demo.
  * Manages the edge context and login state.
@@ -31,40 +19,32 @@ class EdgeLoginComponent extends Component {
     if (restoreCachedState(module, this)) return
     this.state = { account: undefined, context: undefined, wallet: undefined }
     // make the context
-    this.makeEdgeContext()
   }
   /**
   * Creates an EdgeUiContext and saves it in redux-state.
   */
-  async makeEdgeContext() {
-    // Make the context:
-    const context = await makeEdgeUiContext(contextOptions)
-    console.log("setting Context");
-    this.props.setEdgeContext(context)
-
-    // Sign up to be notified when the context logs in:
-    context.on('login', edgeAccount => this.onLogin(edgeAccount))
-  }
+ 
   /**
    * Handles logging in.
    */
   async onLogin(account) {
     console.log('Login for', account.username)
-    ApplicationActions.edgeLogin(account);
-    try {
-      // Find the app wallet, or create one if necessary:
-      const walletInfo = account.getFirstWalletInfo('wallet:ethereum')
-      const wallet =
-        walletInfo == null
-          ? await account.createCurrencyWallet('wallet:ethereum')
-          : await account.waitForCurrencyWallet(walletInfo.id)
+    EdgeContextActions.edgeLogin(account);
 
-      this.setState({ account, wallet })
-    } catch (e) {
-      console.error(e)
-    }
+    // try {
+    //   // Find the app wallet, or create one if necessary:
+    //   const walletInfo = account.getFirstWalletInfo('wallet:ethereum')
+    //   const wallet =
+    //     walletInfo == null
+    //       ? await account.createCurrencyWallet('wallet:ethereum')
+    //       : await account.waitForCurrencyWallet(walletInfo.id)
+
+    //   this.setState({ account, wallet })
+    // } catch (e) {
+    //   console.error(e)
+    // }
   }
-  // TODO: integrate map state to props map dispatch to props
+ 
   /**
    * Logout button was clicked.
    */
@@ -74,7 +54,8 @@ class EdgeLoginComponent extends Component {
   }
 
   render() {
-    const { account, context, wallet } = this.state
+    const context = this.props.edgeContext
+    const account = this.props.edgeAccount
 
     // Login / logout buttons:
     const buttons =
@@ -90,11 +71,11 @@ class EdgeLoginComponent extends Component {
 
     // Content area:
     const content = []
-    if (wallet != null && account != null) {
-      content.push(
-        <WalletInfo account={this.props.edgeAccount} wallet={this.props.edgeWallet} key="wallet" />
-      )
-    }
+    // if (wallet != null && account != null) {
+    //   content.push(
+    //     <WalletInfo account={this.props.edgeAccount} wallet={this.props.edgeWallet} key="wallet" />
+    //   )
+    // }
     if (this.props.edgeAccount != null) {
       content.push(<AccountInfo account={this.props.edgeAccount} key="account" />)
     }
@@ -123,9 +104,9 @@ const mapStateToProps = (ApplicationState) => {
 const mapDispatchToProps = (dispatch) => {
   return {
 
-    setEdgeContext: (context) => dispatch(ApplicationActions.setEdgeContext(context)),
-    edgeLogin: (edgeAccount) => dispatch(ApplicationActions.edgeLogin(edgeAccount)),
-    edgeLogout: () => dispatch(ApplicationActions.edgeLogout())
+    setEdgeContext: (context) => dispatch(EdgeContextActions.setEdgeContext(context)),
+    edgeLogin: (edgeAccount) => dispatch(EdgeContextActions.edgeLogin(edgeAccount)),
+    edgeLogout: () => dispatch(EdgeContextActions.edgeLogout())
   }
 }
 
