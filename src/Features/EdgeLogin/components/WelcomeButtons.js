@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 export class WelcomeButtons extends Component {
+ 
   openLoginWindow = () => {
     if (this.props.context) {
       this.props.context.showLoginWindow()

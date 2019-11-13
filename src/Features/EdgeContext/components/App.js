@@ -31,12 +31,13 @@ class App extends Component {
     this.state = {
       localUsers: 3
     }
+    
     this.makeEdgeContext();
   }
- /**
+ 
+  /**
   * Creates an EdgeUiContext and saves it in redux-state.
   */
- 
   async makeEdgeContext() {
     // Make the context:
     const context = await makeEdgeUiContext(contextOptions)
@@ -47,7 +48,7 @@ class App extends Component {
     context.on('login', edgeAccount => this.onLogin(edgeAccount))
   }
   render() {
-
+    console.log(this.props)
     return (
       <Router>
         <div>
@@ -55,9 +56,7 @@ class App extends Component {
             <ContextInfo context={this.props.edgeContext} />
           </h3>
          
-          ({this.props.edgeContext}
-          <EdgeLoginComponent context={this.props.edgeContext} />
-          )
+       <EdgeLoginComponent /> 
         
         
          {/*  refactor to have the login page 
@@ -75,17 +74,6 @@ class App extends Component {
   }
 }
 
-const userStatus = {
-  isLoggedIn: false,
-  authenticate(cb) {
-    userStatus.isLoggedIn = true;
-    setTimeout(cb, 100); // fake async
-  },
-  signout(cb) {
-    userStatus.isLoggedIn = false;
-    setTimeout(cb, 100);
-  }
-};
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
@@ -94,7 +82,7 @@ function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={({ location }) =>
-        userStatus.isAuthenticated ? (
+        this.props.loggedIn ? (
           children
         ) : (
             <Redirect
