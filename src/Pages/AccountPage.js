@@ -4,14 +4,15 @@ import { AccountInfo } from "../Features/EdgeAccount/components/AccountInfo"
 import { connect } from "react-redux"
 
 import { edgeLogout } from "../Features/EdgeContext/actions/EdgeContextActions"
+
 export const AccountPage = (props) => {
     return (
         <div>
             <p>Account Page</p>
 
-            <AccountButtons context={this.props.edgeContext} onLogout={this.props.edgeLogout} />
+            <AccountButtons context={props.edgeContext} onLogout={this.props.edgeLogout} />
 
-            <AccountInfo account={this.props.edgeAccount} />
+            <AccountInfo account={props.edgeAccount} />
 
         </div>
     )

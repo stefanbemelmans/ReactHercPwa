@@ -5,7 +5,7 @@ import { ContextInfo } from "./Features/EdgeContext/components/ContextInfo"
 import { connect } from "react-redux"
 import EdgeLoginComponent from "./Features/EdgeLogin/components/EdgeLoginComponent";
 import * as EdgeContextActions from "./Features/EdgeContext/actions/EdgeContextActions";
-
+import AuthRoutes from "./Routes/AuthRoutes"
 import {
   BrowserRouter as Router,
   Switch,
@@ -46,7 +46,7 @@ class App extends Component {
     const context = await makeEdgeUiContext(contextOptions)
     console.log("setting Context");
     this.props.setEdgeContext(context)
-    this.setState({ edgeContext: context })
+    // this.setState({ edgeContext: context })
 
     // Sign up to be notified when the context logs in:
     context.on('login', edgeAccount => this.onLogin(edgeAccount))
@@ -56,10 +56,10 @@ class App extends Component {
   * Handles logging in. saves the account in redux and redirect to 
   * WalletPage
   */
-  async onLogin(account) {
+  onLogin(account) {
     console.log('Login for', account.username)
     this.props.edgeLogin(account);
-    return  <Redirect to="./wallet" />
+    // return  (<Redirect to="/loggedIn" />)
   }
 
   /**
@@ -81,16 +81,15 @@ class App extends Component {
           </h3>
           {this.props.loggedIn &&
             <button onClick={() => this.onLogout()}>
-            Edge Logout
-            </button> }
+              Edge Logout
+            </button>}
           {this.props.edgeContext && <EdgeLoginComponent />}
-
-
+            {this.props.loggedIn &&
+              <AuthRoutes />
+            }
 
           <Switch>
-            <PrivateRoute path="/Wallet">
-              <WalletComponent />
-            </PrivateRoute>
+            <Route>Hello</Route>
           </Switch>
 
         </div>
@@ -102,25 +101,7 @@ class App extends Component {
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
-function PrivateRoute({ children, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        this.props.loggedIn ? (
-          <WalletComponent />
-        ) : (
-            <Redirect
-              to={{
-                pathname: "/",
-                state: { from: location }
-              }}
-            />
-          )
-      }
-    />
-  );
-}
+
 
 const mapStateToProps = (state) => {
   return {
