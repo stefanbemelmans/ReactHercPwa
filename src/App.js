@@ -1,24 +1,15 @@
 import React, { Component } from "react";
 import './App.css';
 import { makeEdgeUiContext } from 'edge-login-ui-web'
-import { ContextInfo } from "./Features/EdgeContext/components/ContextInfo"
+// import { ContextInfo } from "./Features/EdgeContext/components/ContextInfo"
 import { connect } from "react-redux"
 
 import * as EdgeContextActions from "./Features/EdgeContext/actions/EdgeContextActions";
 import AuthRoutes from "./Routes/AuthRoutes"
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-  useLocation
-} from "react-router-dom";
-import WalletPage from "./Pages/WalletPage";
-import AccountPage from "./Pages/AccountPage";
-import HomePage from "./Pages/HomePage"
-import LoginPage from "./Pages/LoginPage"
+import { HeaderLinks } from "./Features/Application/HeaderLinks";
+import { useHistory, withRouter } from "react-router-dom"
+
+// TODO: Add the Ethereum Curecy Plugin
 const contextOptions = {
   apiKey: "a9ef0e4134410268a37d833e49990a1b90ec79dc",
   appId: "herc_react_pwa",
@@ -44,11 +35,10 @@ class App extends Component {
   * Creates an EdgeUiContext and saves it in redux.
   */
   async makeEdgeContext() {
-    // Make the context:
     const context = await makeEdgeUiContext(contextOptions)
     console.log("setting Context");
     this.props.setEdgeContext(context)
-    // this.setState({ edgeContext: context })
+    
 
     // Sign up to be notified when the context logs in:
     context.on('login', edgeAccount => this.onLogin(edgeAccount))
@@ -65,7 +55,7 @@ class App extends Component {
   }
 
   /**
-  * Logout button was clicked.
+  * Logout button 
   */
   async onLogout() {
     console.log("Logout for" + this.props.edgeAccount.username)
@@ -76,87 +66,27 @@ class App extends Component {
   render() {
     console.log(this.props)
     return (
-      <Router>
-        <div>
-          <h3>
-            <ContextInfo context={this.props.edgeContext} />
-          </h3>
-          <Link to="/wallet">Wallet</Link>
-          <br />
-          <Link to="/account">Account</Link>
-          <br />
-          <Link to="/login">Login</Link>
-          <br />
-          <Link to="/login">Home</Link>
+      <div>
 
-          {this.props.loggedIn &&
-            <button onClick={() => this.onLogout()}>
-              Edge Logout
+        <HeaderLinks />
+
+        {this.props.loggedIn &&
+          <button onClick={() => this.onLogout()}>
+            Edge Logout
             </button>
-            }
-          
-          {this.props.loggedIn ? <h3>logged IN</h3> : <h3>Not Logged IN</h3> }
+        }
 
-          <Switch>
-            <Route exact path="/">
-              Root path -- Hello
-            <a href="https://explorer.herc.one/" target="blank">link to explorer</a>
-            </Route>
+        {this.props.loggedIn ? <h3>logged IN</h3> : <h3>Not Logged IN</h3>}
 
-            <Route exact path="/login" component={LoginPage} />
+        <AuthRoutes />
 
-            <Route exact path="/wallet" component={WalletPage} />
-              
-            <Route exact path="/account" component={AccountPage} />
+      </div>
 
-            <Route exact path="/home" component={HomePage} />
-
-
-            {/* <PrivateRoute path="/account" loggedIn={this.props.loggedIn}>
-              <AccountPage />
-            </PrivateRoute> */}
-
-{/* 
-            <EdgeLoggedInCheck path='/account'>
-              <WalletPage />
-            </EdgeLoggedInCheck>
-            <EdgeLoggedInCheck path='/assets'>
-              <WalletPage />
-            </EdgeLoggedInCheck>
-            <EdgeLoggedInCheck path='/herc1155'>
-              <WalletPage />
-            </EdgeLoggedInCheck> */}
-
-
-
-
-          </Switch>
-
-        </div>
-      </Router>
     )
   }
 }
 
-function PrivateRoute(loggedIn, { children, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        loggedIn ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/",
-              state: { from: location }
-            }}
-          />
-        )
-      }
-    />
-  );
-    }
+
 
 
 const mapStateToProps = (state) => {
@@ -174,4 +104,4 @@ const mapDispatchToProps = (dispatch) => {
     edgeLogout: () => dispatch(EdgeContextActions.edgeLogout())
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

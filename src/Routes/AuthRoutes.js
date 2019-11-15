@@ -1,51 +1,69 @@
+import React, { Component } from "react"
+import { connect } from "react-redux"
 import WalletPage from "../Pages/WalletPage"
 import AccountPage from "../Pages/AccountPage"
+import HomePage from "../Pages/HomePage"
+import LoginPage from "../Pages/LoginPage"
 
-
-import React from "react";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useParams,
-  useRouteMatch
+  withRouter,
 } from "react-router-dom";
 
-const AuthRoutes = () => {
-let { path, url } = useRouteMatch();
-
-return (
-    <div>
-        <h3>Auth Routes {url}</h3>
-        <ul>
-        <li>
-          <Link to={`/wallet`}>wallet</Link>
-        </li>
-        <li>
-          <Link to={`/account`}>account</Link>
-        </li>
-        <li>
-          {/* <Link to={`${url}/home`}>home</Link> */}
-        </li>
-      </ul>
-
-      <Switch>
-        <Route exact path={path}>
-          <h3>Please select a topic.</h3>
-        </Route>
-        <Route path={`${path}/wallet`}>
-          <WalletPage />
-        </Route>
-        <Route path={`${path}/account`}>
-          <AccountPage />
-        </Route>
-      </Switch>
-
-
-    </div>
-)
-
+const PrivateRoute = ({component: protectedComponent, ...rest}) => {
+   console.log({ ...rest }, "inPrivateRoute")
+   let location = {...rest}
+   if(location.loggedIn === false)
+   {
+     console.log(location.loggedIn, "should go to root") 
+     return(
+     <Route exact path="/" />
+     )
+   }
+  if (location.loggedIn === true) {
+    console.log(location.loggedIn, "loggedIN, should go to" + location.pathname)
+    return (
+      
+      <Route exact
+        path={location.pathname}
+        component={protectedComponent}
+      />
+    )
+  }
+ 
 }
 
-export default AuthRoutes
+class AuthRoutes extends Component {
+  render() {
+    return (
+
+      <Switch>
+        <Route exact path="/">
+          <a href="https://explorer.herc.one/" target="blank">link to explorer</a>
+        </Route>
+
+        <Route exact path="/login" component={LoginPage} />
+
+        <PrivateRoute loggedIn={this.props.loggedIn} path="/wallet" component={WalletPage}  />
+
+        <Route exact path="/account" component={AccountPage} />
+
+        <Route exact path="/home" component={HomePage} />
+
+
+      </Switch>
+    )
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+
+    loggedIn: state.loggedIn
+  }
+}
+
+
+
+export default withRouter(connect(mapStateToProps, null)(AuthRoutes))
