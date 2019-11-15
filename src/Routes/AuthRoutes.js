@@ -1,5 +1,5 @@
-import { WalletPage } from "../Pages/WalletPage"
-import { AccountPage } from "../Pages/AccountPage"
+import WalletPage from "../Pages/WalletPage"
+import AccountPage from "../Pages/AccountPage"
 
 
 import React from "react";

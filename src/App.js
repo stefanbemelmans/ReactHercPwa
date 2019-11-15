@@ -3,7 +3,7 @@ import './App.css';
 import { makeEdgeUiContext } from 'edge-login-ui-web'
 import { ContextInfo } from "./Features/EdgeContext/components/ContextInfo"
 import { connect } from "react-redux"
-import EdgeLoginComponent from "./Features/EdgeLogin/components/EdgeLoginComponent";
+
 import * as EdgeContextActions from "./Features/EdgeContext/actions/EdgeContextActions";
 import AuthRoutes from "./Routes/AuthRoutes"
 import {
@@ -15,8 +15,10 @@ import {
   useHistory,
   useLocation
 } from "react-router-dom";
-import { WalletPage } from "./Pages/WalletPage";
-import {AccountPage } from "./Pages/AccountPage";
+import WalletPage from "./Pages/WalletPage";
+import AccountPage from "./Pages/AccountPage";
+import HomePage from "./Pages/HomePage"
+import LoginPage from "./Pages/LoginPage"
 const contextOptions = {
   apiKey: "a9ef0e4134410268a37d833e49990a1b90ec79dc",
   appId: "herc_react_pwa",
@@ -78,26 +80,41 @@ class App extends Component {
         <div>
           <h3>
             <ContextInfo context={this.props.edgeContext} />
-          <Link to="/wallet">Wallet</Link>
-          <Link to="/account">Account</Link>
           </h3>
+          <Link to="/wallet">Wallet</Link>
+          <br />
+          <Link to="/account">Account</Link>
+          <br />
+          <Link to="/login">Login</Link>
+          <br />
+          <Link to="/login">Home</Link>
+
           {this.props.loggedIn &&
             <button onClick={() => this.onLogout()}>
               Edge Logout
             </button>
             }
           
-          {this.props.loggedIn}
+          {this.props.loggedIn ? <h3>logged IN</h3> : <h3>Not Logged IN</h3> }
 
           <Switch>
-            <Route exact path="/">Hello
+            <Route exact path="/">
+              Root path -- Hello
             <a href="https://explorer.herc.one/" target="blank">link to explorer</a>
-           
-            {this.props.edgeContext && <EdgeLoginComponent />}
             </Route>
 
+            <Route exact path="/login" component={LoginPage} />
+
             <Route exact path="/wallet" component={WalletPage} />
+              
             <Route exact path="/account" component={AccountPage} />
+
+            <Route exact path="/home" component={HomePage} />
+
+
+            {/* <PrivateRoute path="/account" loggedIn={this.props.loggedIn}>
+              <AccountPage />
+            </PrivateRoute> */}
 
 {/* 
             <EdgeLoggedInCheck path='/account'>
@@ -120,6 +137,26 @@ class App extends Component {
     )
   }
 }
+
+function PrivateRoute(loggedIn, { children, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        loggedIn ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+    }
 
 
 const mapStateToProps = (state) => {

@@ -1,15 +1,11 @@
-import React, { Component } from 'react'
+import React from "react";
 import { connect } from "react-redux"
 
-import { WalletComponent } from "../Features/EdgeWallet/components/WalletComponent"
-
-
-const WalletPage = (props) => {
+const HomePage = (props) => {
     return (
         <div>
-            {props.edgeAccount && <p>Hello </p>}
-            <p>Wallet Page</p>
-
+            <p>HomePage Page</p>
+            <h3>Whattup!</h3>
         </div>
     )
 }
@@ -27,4 +23,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletPage)
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
