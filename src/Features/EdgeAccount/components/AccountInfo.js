@@ -3,7 +3,7 @@ import React from 'react'
 import ReactJson from 'react-json-view'
 
 export function AccountInfo(props) {
-  const { account } = props
+  const { account } = props.edgeAccount
 
   return (
     <div>

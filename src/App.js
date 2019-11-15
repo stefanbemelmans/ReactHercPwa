@@ -15,8 +15,8 @@ import {
   useHistory,
   useLocation
 } from "react-router-dom";
-import { WalletComponent } from "./Features/EdgeWallet/components/WalletComponent";
-
+import { WalletPage } from "./Pages/WalletPage";
+import {AccountPage } from "./Pages/AccountPage";
 const contextOptions = {
   apiKey: "a9ef0e4134410268a37d833e49990a1b90ec79dc",
   appId: "herc_react_pwa",
@@ -59,7 +59,7 @@ class App extends Component {
   onLogin(account) {
     console.log('Login for', account.username)
     this.props.edgeLogin(account);
-    // return  (<Redirect to="/loggedIn" />)
+    useHistory().push("/wallet");
   }
 
   /**
@@ -78,18 +78,41 @@ class App extends Component {
         <div>
           <h3>
             <ContextInfo context={this.props.edgeContext} />
+          <Link to="/wallet">Wallet</Link>
+          <Link to="/account">Account</Link>
           </h3>
           {this.props.loggedIn &&
             <button onClick={() => this.onLogout()}>
               Edge Logout
-            </button>}
-          {this.props.edgeContext && <EdgeLoginComponent />}
-            {this.props.loggedIn &&
-              <AuthRoutes />
+            </button>
             }
+          
+          {this.props.loggedIn}
 
           <Switch>
-            <Route>Hello</Route>
+            <Route exact path="/">Hello
+            <a href="https://explorer.herc.one/" target="blank">link to explorer</a>
+           
+            {this.props.edgeContext && <EdgeLoginComponent />}
+            </Route>
+
+            <Route exact path="/wallet" component={WalletPage} />
+            <Route exact path="/account" component={AccountPage} />
+
+{/* 
+            <EdgeLoggedInCheck path='/account'>
+              <WalletPage />
+            </EdgeLoggedInCheck>
+            <EdgeLoggedInCheck path='/assets'>
+              <WalletPage />
+            </EdgeLoggedInCheck>
+            <EdgeLoggedInCheck path='/herc1155'>
+              <WalletPage />
+            </EdgeLoggedInCheck> */}
+
+
+
+
           </Switch>
 
         </div>
@@ -97,10 +120,6 @@ class App extends Component {
     )
   }
 }
-
-
-// A wrapper for <Route> that redirects to the login
-// screen if you're not yet authenticated.
 
 
 const mapStateToProps = (state) => {

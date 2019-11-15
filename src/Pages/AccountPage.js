@@ -10,9 +10,9 @@ export const AccountPage = (props) => {
         <div>
             <p>Account Page</p>
 
-            <AccountButtons context={props.edgeContext} onLogout={this.props.edgeLogout} />
+            <AccountButtons context={props.edgeContext} onLogout={props.edgeLogout} />
 
-            <AccountInfo account={props.edgeAccount} />
+            {/* <AccountInfo account={props.edgeAccount} /> */}
 
         </div>
     )

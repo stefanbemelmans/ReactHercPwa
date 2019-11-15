@@ -7,9 +7,8 @@ import { WalletComponent } from "../Features/EdgeWallet/components/WalletCompone
 export const WalletPage = (props) => {
     return (
         <div>
-
+            {props.edgeAccount && <p>Hello </p>}
             <p>Wallet Page</p>
-            <WalletComponent />
 
         </div>
     )

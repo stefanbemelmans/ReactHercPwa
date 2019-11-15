@@ -17,13 +17,13 @@ let { path, url } = useRouteMatch();
 
 return (
     <div>
-        <h3>Auth Routes</h3>
+        <h3>Auth Routes {url}</h3>
         <ul>
         <li>
-          <Link to={`${url}/wallet`}>wallet</Link>
+          <Link to={`/wallet`}>wallet</Link>
         </li>
         <li>
-          <Link to={`${url}/account`}>account</Link>
+          <Link to={`/account`}>account</Link>
         </li>
         <li>
           {/* <Link to={`${url}/home`}>home</Link> */}
